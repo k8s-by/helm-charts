@@ -1,0 +1,16 @@
+apiVersion: v2
+name: raw
+home: https://github.com/k8s-by/helm-charts/blob/master/charts/raw
+version: 1.0.0
+appVersion: 1.0.0
+kubeVersion: ">=1.11.0-0"
+keywords:
+  - raw
+  - mainfest
+  - template
+  - helmfile
+sources:
+  - https://github.com/k8s-by/helm-charts/blob/master/charts/raw
+maintainers:
+  - name: Alex Egorov
+    email: alex202@egorov.net
