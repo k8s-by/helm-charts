@@ -1,0 +1,16 @@
+apiVersion: v2
+name: pgbouncer
+version: 1.15.0
+appVersion: "1.15.0"
+description: A Helm chart installing pgbouncer in kubernetes
+home: https://github.com/k8s-by/helm-charts/blob/master/charts/pgbouncer
+kubeVersion: ">=1.19.0-0"
+keywords:
+  - pgbouncer
+  - postgres
+  - database
+sources:
+  - https://github.com/k8s-by/helm-charts/blob/master/charts/pgbouncer
+maintainers:
+  - name: Alex Egorov
+    email: alex202@egorov.net
