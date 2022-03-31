@@ -1,6 +1,6 @@
 apiVersion: v2
 name: pgbouncer
-version: 1.15.0
+version: 1.15.1
 appVersion: "1.15.0"
 description: A Helm chart installing pgbouncer in kubernetes
 home: https://github.com/k8s-by/helm-charts/blob/master/charts/pgbouncer
