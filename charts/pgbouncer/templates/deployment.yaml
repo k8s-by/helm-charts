@@ -32,11 +32,6 @@ spec:
         {{- end }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
-        {{- if .Values.pgbouncerExporter.enabled }}
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "{{ .Values.pgbouncerExporter.port }}"
-        prometheus.io/path: "/metrics"
-        {{- end }}
         {{ range $key, $value := .Values.podAnnotations -}}
         {{ $key }}: {{ $value | quote }}
         {{- end }}
@@ -128,7 +123,7 @@ spec:
         resources: {{ toYaml .Values.pgbouncerExporter.resources | trimSuffix "\n" | nindent 10 }}
         {{- end }}
         ports:
-        - name: exporter
+        - name: metrics
           containerPort: {{ .Values.pgbouncerExporter.port }}
           protocol: TCP
       {{- end }}

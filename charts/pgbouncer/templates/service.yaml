@@ -14,6 +14,10 @@ spec:
       targetPort: psql
       protocol: TCP
       name: psql
+    - port: {{ .Values.pgbouncerExporter.port}}
+      targetPort: metrics
+      protocol: TCP
+      name: metrics
   selector:
     app.kubernetes.io/name: {{ template "pgbouncer.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}

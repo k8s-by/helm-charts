@@ -1,16 +1,12 @@
-FROM alpine:3.9
+FROM alpine:3.15
 
-FROM alpine:3.9 AS build_stage
+ARG PGBOUNCER_VERSION
 
-LABEL maintainer "robert@aztek.io"
-
-# hadolint ignore=DL3018
-RUN apk --update --no-cache add \
+RUN apk --update --no-cache add udns \
         autoconf \
         autoconf-doc \
         automake \
-        c-ares \
-        c-ares-dev \
+        udns-dev \        
         curl \
         gcc \
         libc-dev \
@@ -18,48 +14,25 @@ RUN apk --update --no-cache add \
         libevent-dev \
         libtool \
         make \
-        libressl-dev \
-        file \
-        pkgconf
-
-ARG PGBOUNCER_VERSION
-
-RUN curl -Lso  "/tmp/pgbouncer.tar.gz" "https://pgbouncer.github.io/downloads/files/${PGBOUNCER_VERSION}/pgbouncer-${PGBOUNCER_VERSION}.tar.gz" && \
-        file "/tmp/pgbouncer.tar.gz"
-
-WORKDIR /tmp
-
-RUN mkdir /tmp/pgbouncer && \
-        tar -zxvf pgbouncer.tar.gz -C /tmp/pgbouncer --strip-components 1
-
-WORKDIR /tmp/pgbouncer
-
-RUN ./configure --prefix=/usr && \
-        make
-
-
-
-FROM alpine:3.15.0
-
-LABEL maintainer "alex202@egorov.net"
-
-# hadolint ignore=DL3018
-RUN apk --update --no-cache add \
-        libevent \
-        libressl \
+        openssl-dev \
         ca-certificates \
-        c-ares
+        pkgconf \
+  && curl -Lo  "/tmp/pgbouncer.tar.gz" "https://pgbouncer.github.io/downloads/files/${PGBOUNCER_VERSION}/pgbouncer-${PGBOUNCER_VERSION}.tar.gz" \
+  && cd /tmp && mkdir /tmp/pgbouncer && tar -zxvf pgbouncer.tar.gz -C /tmp/pgbouncer --strip-components 1 \
+  && ( cd /tmp/pgbouncer && ./configure --prefix=/usr --with-udns && make \
+  && mkdir -p /etc/pgbouncer /var/log/pgbouncer /var/run/pgbouncer \
+     && cp pgbouncer /usr/bin \
+     && cp etc/pgbouncer.ini /etc/pgbouncer.ini.example \
+     && cp etc/userlist.txt /etc/pgbouncer/userlist.txt.example ) \
+  && addgroup  -g 70 -S postgres 2>/dev/null \
+  && adduser -u 70 -S -D -H -h /var/lib/postgresql -g "Postgres user" -s /bin/sh -G postgres postgres 2>/dev/null \
+  && chown -R postgres /var/run/pgbouncer /etc/pgbouncer \
+  && rm -rf /tmp/pgbouncer  \  
+  && apk del --purge autoconf autoconf-doc automake udns-dev curl gcc libc-dev libevent-dev libtool make openssl-dev pkgconfig
 
-WORKDIR /etc/pgbouncer
-WORKDIR /var/log/pgbouncer
-
-RUN addgroup -S postgres && adduser -S postgres -G root \
-    && chown -R postgres:root /etc/pgbouncer /var/log/pgbouncer
+COPY entrypoint.sh /opt/pgbouncer/entrypoint.sh
 
 USER postgres
-
-COPY --from=build_stage --chown=postgres ["/tmp/pgbouncer", "/opt/pgbouncer"]
-COPY --chown=postgres ["entrypoint.sh", "/opt/pgbouncer"]
 
 WORKDIR /opt/pgbouncer
 ENTRYPOINT ["/opt/pgbouncer/entrypoint.sh"]

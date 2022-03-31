@@ -2,9 +2,11 @@
 set -e
 
 PG_CONFIG_DIR=/etc/pgbouncer
+PG_USERLIST_FILE=${PG_CONFIG_DIR}/userlist.txt
 
 invoke_main(){
     check_variables
+    create_userlist_file
     create_config
     start_app
 }
@@ -43,6 +45,19 @@ ${DATABASES_CLIENT_ENCODING:+" client_encoding=${DATABASES_CLIENT_ENCODING}"}\
 ${DATABASES_DATESTYLE:+" datestyle=${DATABASES_DATESTYLE}"}\
 ${DATABASES_TIMEZONE:+" timezone=${DATABASES_TIMEZONE}"}
 EOF
+  fi
+}
+
+create_userlist_file(){
+
+  if [ "${PGBOUNCER_AUTH_TYPE}" == "md5" ]; then
+    echo "Creating userlist file in ${PG_CONFIG_DIR}"
+
+    PGBOUNCER_AUTH_FILE=${PG_USERLIST_FILE}
+
+    pass="md5$(echo -n "$POSTGRES_PASSWORD$POSTGRES_USER" | md5sum | cut -f 1 -d ' ')"
+    echo "\"$POSTGRES_USER\" \"$pass\"" >> ${PG_USERLIST_FILE}
+    echo "Wrote authentication credentials to ${PG_USERLIST_FILE}"
   fi
 }
 
@@ -94,6 +109,7 @@ ${PGBOUNCER_SYSLOG_FACILITY:+syslog_facility = ${PGBOUNCER_SYSLOG_FACILITY}${nl}
 ${PGBOUNCER_LOG_CONNECTIONS:+log_connections = ${PGBOUNCER_LOG_CONNECTIONS}${nl}}\
 ${PGBOUNCER_LOG_DISCONNECTIONS:+log_disconnections = ${PGBOUNCER_LOG_DISCONNECTIONS}${nl}}\
 ${PGBOUNCER_LOG_POOLER_ERRORS:+log_pooler_errors = ${PGBOUNCER_LOG_POOLER_ERRORS}${nl}}\
+${PGBOUNCER_LOG_STATS:+log_stats = ${PGBOUNCER_LOG_STATS}${nl}}\
 ${PGBOUNCER_STATS_PERIOD:+stats_period = ${PGBOUNCER_STATS_PERIOD}${nl}}\
 ${PGBOUNCER_VERBOSE:+verbose = ${PGBOUNCER_VERBOSE}${nl}}\
 admin_users = ${PGBOUNCER_ADMIN_USERS:-postgres}
@@ -153,7 +169,7 @@ EOF
 
 start_app(){
     echo "Starting pgbouncer."
-    exec /opt/pgbouncer/pgbouncer ${QUIET:+-q} ${PGBOUNCER_USER:+-u ${PGBOUNCER_USER}} ${PG_CONFIG_DIR}/pgbouncer.ini
+    exec /usr/bin/pgbouncer ${QUIET:+-q} ${PGBOUNCER_USER:+-u ${PGBOUNCER_USER}} ${PG_CONFIG_DIR}/pgbouncer.ini
 }
 
 invoke_main

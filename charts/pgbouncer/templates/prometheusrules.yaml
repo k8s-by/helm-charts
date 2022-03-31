@@ -1,0 +1,19 @@
+{{- if .Values.prometheusRule.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+  name: {{ include "pgbouncer.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ template "pgbouncer.name" . }}
+    helm.sh/chart: {{ template "pgbouncer.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- if .Values.prometheusRule.labels }}
+{{- toYaml .Values.prometheusRule.labels | nindent 4 }}
+{{- end }}
+spec:
+{{- with .Values.prometheusRule.rules }}
+  groups:
+    - name: {{ template "pgbouncer.name" . }}
+      rules: {{ tpl (toYaml .) $ | nindent 8 }}
+{{- end }}
+{{- end }}
