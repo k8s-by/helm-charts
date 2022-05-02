@@ -1,7 +1,7 @@
 apiVersion: v2
 name: raw
 home: https://github.com/k8s-by/helm-charts/blob/master/charts/raw
-version: 1.0.0
+version: 1.0.1
 appVersion: 1.0.0
 kubeVersion: ">=1.11.0-0"
 keywords:
