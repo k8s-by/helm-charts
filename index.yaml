@@ -44,6 +44,26 @@ entries:
   raw:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2022-05-02T21:52:21.958232561Z"
+    digest: 40e68a566f0d9dc5e76aaa54af948eb968b3da3253c4b1be46a7be2057c59eb4
+    home: https://github.com/k8s-by/helm-charts/blob/master/charts/raw
+    keywords:
+    - raw
+    - mainfest
+    - template
+    - helmfile
+    kubeVersion: '>=1.11.0-0'
+    maintainers:
+    - email: alex202@egorov.net
+      name: Alex Egorov
+    name: raw
+    sources:
+    - https://github.com/k8s-by/helm-charts/blob/master/charts/raw
+    urls:
+    - https://github.com/k8s-by/helm-charts/releases/download/raw-1.0.1/raw-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2022-01-15T23:48:03.647785667Z"
     digest: bc7a3a5dd3784d2a27ac842372ebd73cf3ad10330e4550a83a6af3cdb80e44d6
     home: https://github.com/k8s-by/helm-charts/blob/master/charts/raw
@@ -62,4 +82,4 @@ entries:
     urls:
     - https://github.com/k8s-by/helm-charts/releases/download/raw-1.0.0/raw-1.0.0.tgz
     version: 1.0.0
-generated: "2022-03-31T15:20:26.693038679Z"
+generated: "2022-05-02T21:52:21.958250163Z"
