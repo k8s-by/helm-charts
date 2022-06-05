@@ -2,6 +2,31 @@ apiVersion: v1
 entries:
   eck-operator-crds:
   - apiVersion: v2
+    appVersion: 2.2.0
+    created: "2022-06-05T06:20:39.076062045Z"
+    description: 'A Helm chart for installing the ECK operator Custom Resource Definitions
+      (CRD). '
+    digest: 68cca8b9d454de50401e9218946e576f5f6dc689201a99dc1628bc73f4b46229
+    home: https://github.com/elastic/cloud-on-k8s
+    icon: https://helm.elastic.co/icons/eck.png
+    keywords:
+    - Elasticsearch
+    - Kibana
+    - APM Server
+    - Beats
+    - Enterprise Search
+    - Elastic Stack
+    - Operator
+    kubeVersion: '>=1.12.0-0'
+    maintainers:
+    - email: eck@elastic.co
+      name: Elastic
+    name: eck-operator-crds
+    type: application
+    urls:
+    - https://github.com/k8s-by/helm-charts/releases/download/eck-operator-crds-2.2.0/eck-operator-crds-2.2.0.tgz
+    version: 2.2.0
+  - apiVersion: v2
     appVersion: 2.1.0
     created: "2022-05-31T20:28:34.512936525Z"
     description: 'A Helm chart for installing the ECK operator Custom Resource Definitions
@@ -151,4 +176,4 @@ entries:
     urls:
     - https://github.com/k8s-by/helm-charts/releases/download/vault-0.20.0/vault-0.20.0.tgz
     version: 0.20.0
-generated: "2022-05-31T20:28:34.779871376Z"
+generated: "2022-06-05T06:20:39.076079045Z"
