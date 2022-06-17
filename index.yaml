@@ -131,6 +131,35 @@ entries:
     urls:
     - https://github.com/k8s-by/helm-charts/releases/download/logstash-7.17.1/logstash-7.17.1.tgz
     version: 7.17.1
+  nexus3:
+  - apiVersion: v2
+    appVersion: 3.38.1-01
+    created: "2022-06-17T08:43:40.487801515Z"
+    description: Sonatype Nexus Repository Manager - Universal Binary repository
+    digest: ed374394cf2490c9e5bade4ffabf48ad90b29a17617857d4cc6f9bbe8732ff0b
+    home: https://www.sonatype.com/nexus-repository-oss
+    icon: https://sonatype.github.io/helm3-charts/NexusRepo_Vertical.svg
+    keywords:
+    - artifacts
+    - dependency
+    - management
+    - sonatype
+    - nexus
+    - repository
+    - quickstart
+    - ci
+    - repository-manager
+    - nexus3
+    maintainers:
+    - email: alex202@k8s.by
+      name: Alex Egorov
+    name: nexus3
+    sources:
+    - https://github.com/sonatype/nexus-public
+    type: application
+    urls:
+    - https://github.com/k8s-by/helm-charts/releases/download/nexus3-3.38.1/nexus3-3.38.1.tgz
+    version: 3.38.1
   pgbouncer:
   - apiVersion: v2
     appVersion: 1.15.0
@@ -239,4 +268,4 @@ entries:
     urls:
     - https://github.com/k8s-by/helm-charts/releases/download/vault-0.20.0/vault-0.20.0.tgz
     version: 0.20.0
-generated: "2022-06-07T18:33:13.525221738Z"
+generated: "2022-06-17T08:43:40.487822614Z"
