@@ -205,6 +205,39 @@ entries:
   - annotations:
       category: Database
     apiVersion: v2
+    appVersion: 13.7.0
+    created: "2022-06-18T21:01:14.74350556Z"
+    dependencies:
+    - name: common
+      repository: ""
+      version: 1.x.x
+    description: Chart for PostgreSQL, an object-relational database management system
+      (ORDBMS) with an emphasis on extensibility and on standards-compliance.
+    digest: 4b2f7e92008a6e25058501cc6c61e6b1692e42330caa749f39fa97377fc88e62
+    home: https://github.com/bitnami/charts/tree/master/bitnami/postgresql
+    icon: https://bitnami.com/assets/stacks/postgresql/img/postgresql-stack-220x234.png
+    keywords:
+    - postgresql
+    - postgres
+    - database
+    - sql
+    - replication
+    - cluster
+    maintainers:
+    - email: containers@bitnami.com
+      name: Bitnami
+    - email: cedric@desaintmartin.fr
+      name: desaintmartin
+    name: postgres
+    sources:
+    - https://github.com/bitnami/bitnami-docker-postgresql
+    - https://www.postgresql.org/
+    urls:
+    - https://github.com/k8s-by/helm-charts/releases/download/postgres-13.7.0/postgres-13.7.0.tgz
+    version: 13.7.0
+  - annotations:
+      category: Database
+    apiVersion: v2
     appVersion: 11.14.0
     created: "2022-06-18T21:00:06.312849256Z"
     dependencies:
@@ -335,4 +368,4 @@ entries:
     urls:
     - https://github.com/k8s-by/helm-charts/releases/download/vault-0.20.0/vault-0.20.0.tgz
     version: 0.20.0
-generated: "2022-06-18T21:00:06.312893758Z"
+generated: "2022-06-18T21:01:14.74354336Z"
