@@ -201,6 +201,40 @@ entries:
     urls:
     - https://github.com/k8s-by/helm-charts/releases/download/pgbouncer-1.15.0/pgbouncer-1.15.0.tgz
     version: 1.15.0
+  postgres:
+  - annotations:
+      category: Database
+    apiVersion: v2
+    appVersion: 11.14.0
+    created: "2022-06-18T20:52:35.991471741Z"
+    dependencies:
+    - name: common
+      repository: ""
+      version: 1.x.x
+    description: Chart for PostgreSQL, an object-relational database management system
+      (ORDBMS) with an emphasis on extensibility and on standards-compliance.
+    digest: df85fcff195e624336718916bb8f599fff3c5772f7976226867d4262db9a20d1
+    home: https://github.com/bitnami/charts/tree/master/bitnami/postgresql
+    icon: https://bitnami.com/assets/stacks/postgresql/img/postgresql-stack-220x234.png
+    keywords:
+    - postgresql
+    - postgres
+    - database
+    - sql
+    - replication
+    - cluster
+    maintainers:
+    - email: containers@bitnami.com
+      name: Bitnami
+    - email: cedric@desaintmartin.fr
+      name: desaintmartin
+    name: postgres
+    sources:
+    - https://github.com/bitnami/bitnami-docker-postgresql
+    - https://www.postgresql.org/
+    urls:
+    - https://github.com/k8s-by/helm-charts/releases/download/postgres-11.14.0/postgres-11.14.0.tgz
+    version: 11.14.0
   raw:
   - apiVersion: v2
     appVersion: 1.0.0
@@ -268,4 +302,4 @@ entries:
     urls:
     - https://github.com/k8s-by/helm-charts/releases/download/vault-0.20.0/vault-0.20.0.tgz
     version: 0.20.0
-generated: "2022-06-17T08:43:40.487822614Z"
+generated: "2022-06-18T20:52:35.991513541Z"
