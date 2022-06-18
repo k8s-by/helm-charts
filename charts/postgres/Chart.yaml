@@ -25,4 +25,4 @@ name: postgres
 sources:
 - https://github.com/bitnami/bitnami-docker-postgresql
 - https://www.postgresql.org/
-version: 11.14.0
+version: 12.11.0
