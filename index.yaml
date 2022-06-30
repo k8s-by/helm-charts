@@ -114,6 +114,24 @@ entries:
     urls:
     - https://github.com/k8s-by/helm-charts/releases/download/eck-operator-crds-2.1.0/eck-operator-crds-2.1.0.tgz
     version: 2.1.0
+  haproxy:
+  - apiVersion: v2
+    appVersion: 2.5.7
+    created: "2022-06-30T21:07:45.23024911Z"
+    description: A Helm chart for HAProxy on Kubernetes
+    digest: 8c284fe7664e1744d5f01ea34ba38ea222b9c943dc05b3f7b87f648784c50f9d
+    home: https://github.com/haproxytech/helm-charts/tree/main/haproxy
+    icon: https://raw.githubusercontent.com/haproxytech/helm-charts/main/haproxy/chart-icon.png
+    keywords:
+    - haproxy
+    kubeVersion: '>=1.17.0-0'
+    name: haproxy
+    sources:
+    - http://www.haproxy.org/
+    type: application
+    urls:
+    - https://github.com/k8s-by/helm-charts/releases/download/haproxy-2.5.7/haproxy-2.5.7.tgz
+    version: 2.5.7
   logstash:
   - apiVersion: v1
     appVersion: 7.17.1
@@ -401,4 +419,4 @@ entries:
     urls:
     - https://github.com/k8s-by/helm-charts/releases/download/vault-0.20.0/vault-0.20.0.tgz
     version: 0.20.0
-generated: "2022-06-18T21:04:58.864379819Z"
+generated: "2022-06-30T21:07:45.23027491Z"
