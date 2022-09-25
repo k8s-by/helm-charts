@@ -149,6 +149,28 @@ entries:
     urls:
     - https://github.com/k8s-by/helm-charts/releases/download/logstash-7.17.1/logstash-7.17.1.tgz
     version: 7.17.1
+  metricbeat:
+  - apiVersion: v1
+    appVersion: 7.17.3
+    created: "2022-09-25T10:33:51.639979879Z"
+    dependencies:
+    - condition: kube_state_metrics.enabled
+      name: kube-state-metrics
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 4.7.0
+    description: Official Elastic helm chart for Metricbeat
+    digest: 897c29c45989b15535fc5cdcc7e454b1bf57b87306e7ea656a42bd72464a7871
+    home: https://github.com/elastic/helm-charts
+    icon: https://helm.elastic.co/icons/beats.png
+    maintainers:
+    - email: helm-charts@elastic.co
+      name: Elastic
+    name: metricbeat
+    sources:
+    - https://github.com/elastic/beats
+    urls:
+    - https://github.com/k8s-by/helm-charts/releases/download/metricbeat-7.17.3/metricbeat-7.17.3.tgz
+    version: 7.17.3
   nexus3:
   - apiVersion: v2
     appVersion: 3.38.1-01
@@ -442,4 +464,4 @@ entries:
     urls:
     - https://github.com/k8s-by/helm-charts/releases/download/vault-0.20.0/vault-0.20.0.tgz
     version: 0.20.0
-generated: "2022-07-11T12:22:36.439001894Z"
+generated: "2022-09-25T10:33:51.640023982Z"
