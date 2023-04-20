@@ -13,10 +13,13 @@ jobs:
           fetch-depth: 0
 
       - name: Install Helm
-        uses: azure/setup-helm@v1
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.7.1
 
       - name: Add dependency chart repos
         run: |
+          helm init
           helm repo add prometheus https://prometheus-community.github.io/helm-charts
 
 
