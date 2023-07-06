@@ -161,7 +161,7 @@ defined a custom configuration.  Additionally iterates over any
 extra volumes the user may have specified (such as a secret with TLS).
 */}}
 {{- define "vault.volumes" -}}
-  {{- if and (ne .mode "dev") (or (.Values.server.standalone.config) (.Values.server.ha.config)) }}
+  {{- if or (.Values.server.standalone.config) (.Values.server.ha.config) }}
         - name: config
           configMap:
             name: {{ template "vault.fullname" . }}-config
@@ -236,7 +236,7 @@ based on the mode configured.
               mountPath: {{ .Values.server.dataStorage.mountPath }}
     {{ end }}
   {{ end }}
-  {{ if and (ne .mode "dev") (or (.Values.server.standalone.config)  (.Values.server.ha.config)) }}
+  {{ if or (.Values.server.standalone.config)  (.Values.server.ha.config) }}
             - name: config
               mountPath: /vault/config
   {{ end }}
@@ -261,7 +261,7 @@ might not use data storage since Consul is likely it's backend, however, audit
 storage might be desired by the user.
 */}}
 {{- define "vault.volumeclaims" -}}
-  {{- if and (ne .mode "dev") (or .Values.server.dataStorage.enabled .Values.server.auditStorage.enabled) }}
+  {{- if or .Values.server.dataStorage.enabled .Values.server.auditStorage.enabled }}
   volumeClaimTemplates:
       {{- if and (eq (.Values.server.dataStorage.enabled | toString) "true") (or (eq .mode "standalone") (eq (.Values.server.ha.raft.enabled | toString ) "true" )) }}
     - metadata:
@@ -298,7 +298,7 @@ storage might be desired by the user.
 Set's the affinity for pod placement when running in standalone and HA modes.
 */}}
 {{- define "vault.affinity" -}}
-  {{- if and (ne .mode "dev") .Values.server.affinity }}
+  {{- if .Values.server.affinity }}
       affinity:
         {{ $tp := typeOf .Values.server.affinity }}
         {{- if eq $tp "string" }}
@@ -328,7 +328,7 @@ Sets the injector affinity for pod placement
 Sets the topologySpreadConstraints when running in standalone and HA modes.
 */}}
 {{- define "vault.topologySpreadConstraints" -}}
-  {{- if and (ne .mode "dev") .Values.server.topologySpreadConstraints }}
+  {{- if .Values.server.topologySpreadConstraints }}
       topologySpreadConstraints:
         {{ $tp := typeOf .Values.server.topologySpreadConstraints }}
         {{- if eq $tp "string" }}
@@ -359,7 +359,7 @@ Sets the injector topologySpreadConstraints for pod placement
 Sets the toleration for pod placement when running in standalone and HA modes.
 */}}
 {{- define "vault.tolerations" -}}
-  {{- if and (ne .mode "dev") .Values.server.tolerations }}
+  {{- if .Values.server.tolerations }}
       tolerations:
       {{- $tp := typeOf .Values.server.tolerations }}
       {{- if eq $tp "string" }}
@@ -389,7 +389,7 @@ Sets the injector toleration for pod placement
 Set's the node selector for pod placement when running in standalone and HA modes.
 */}}
 {{- define "vault.nodeselector" -}}
-  {{- if and (ne .mode "dev") .Values.server.nodeSelector }}
+  {{- if .Values.server.nodeSelector }}
       nodeSelector:
       {{- $tp := typeOf .Values.server.nodeSelector }}
       {{- if eq $tp "string" }}
@@ -561,7 +561,7 @@ securityContext for the statefulset vault container
 Sets extra injector service account annotations
 */}}
 {{- define "injector.serviceAccount.annotations" -}}
-  {{- if and (ne .mode "dev") .Values.injector.serviceAccount.annotations }}
+  {{- if .Values.injector.serviceAccount.annotations }}
   annotations:
     {{- $tp := typeOf .Values.injector.serviceAccount.annotations }}
     {{- if eq $tp "string" }}
@@ -633,7 +633,7 @@ Create the name of the service account to use
 Sets extra service account annotations
 */}}
 {{- define "vault.serviceAccount.annotations" -}}
-  {{- if and (ne .mode "dev") .Values.server.serviceAccount.annotations }}
+  {{- if .Values.server.serviceAccount.annotations }}
   annotations:
     {{- $tp := typeOf .Values.server.serviceAccount.annotations }}
     {{- if eq $tp "string" }}
@@ -722,7 +722,7 @@ Sets extra statefulset annotations
 Sets VolumeClaim annotations for data volume
 */}}
 {{- define "vault.dataVolumeClaim.annotations" -}}
-  {{- if and (ne .mode "dev") (.Values.server.dataStorage.enabled) (.Values.server.dataStorage.annotations) }}
+  {{- if and (.Values.server.dataStorage.enabled) (.Values.server.dataStorage.annotations) }}
   annotations:
     {{- $tp := typeOf .Values.server.dataStorage.annotations }}
     {{- if eq $tp "string" }}
@@ -737,7 +737,7 @@ Sets VolumeClaim annotations for data volume
 Sets VolumeClaim annotations for audit volume
 */}}
 {{- define "vault.auditVolumeClaim.annotations" -}}
-  {{- if and (ne .mode "dev") (.Values.server.auditStorage.enabled) (.Values.server.auditStorage.annotations) }}
+  {{- if and (.Values.server.auditStorage.enabled) (.Values.server.auditStorage.annotations) }}
   annotations:
     {{- $tp := typeOf .Values.server.auditStorage.annotations }}
     {{- if eq $tp "string" }}
