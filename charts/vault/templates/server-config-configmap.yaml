@@ -6,6 +6,7 @@ SPDX-License-Identifier: MPL-2.0
 {{ template "vault.mode" . }}
 {{- if ne .mode "external" }}
 {{- if .serverEnabled -}}
+{{- if ne .mode "dev" -}}
 {{ if or (.Values.server.standalone.config) (.Values.server.ha.config) -}}
 apiVersion: v1
 kind: ConfigMap
@@ -38,6 +39,7 @@ data:
   {{- end }}
   {{- end }}
   {{- end }}
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}

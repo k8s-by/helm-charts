@@ -132,7 +132,7 @@ template logic.
   {{- else if not .serverEnabled -}}
     {{- $_ := set . "mode" "external" -}}
   {{- else if eq (.Values.server.dev.enabled | toString) "true" -}}
-    {{- $_ := set . "mode" "standalone" -}}
+    {{- $_ := set . "mode" "dev" -}}
   {{- else if eq (.Values.server.ha.enabled | toString) "true" -}}
     {{- $_ := set . "mode" "ha" -}}
   {{- else if or (eq (.Values.server.standalone.enabled | toString) "true") (eq (.Values.server.standalone.enabled | toString) "-") -}}
@@ -161,7 +161,7 @@ defined a custom configuration.  Additionally iterates over any
 extra volumes the user may have specified (such as a secret with TLS).
 */}}
 {{- define "vault.volumes" -}}
-  {{- if or (.Values.server.standalone.config) (.Values.server.ha.config) }}
+  {{- if and (ne .mode "dev") (or (.Values.server.standalone.config) (.Values.server.ha.config)) }}
         - name: config
           configMap:
             name: {{ template "vault.fullname" . }}-config
@@ -193,29 +193,27 @@ file with IP addresses to make the out of box experience easier
 for users looking to use this chart with Consul Helm.
 */}}
 {{- define "vault.args" -}}
-  {{ if .Values.server.dev.enabled }}
+  {{ if or (eq .mode "standalone") (eq .mode "ha") }}
+          - |
+            cp /vault/config/extraconfig-from-values.hcl /tmp/storageconfig.hcl;
+            [ -n "${HOST_IP}" ] && sed -Ei "s|HOST_IP|${HOST_IP?}|g" /tmp/storageconfig.hcl;
+            [ -n "${POD_IP}" ] && sed -Ei "s|POD_IP|${POD_IP?}|g" /tmp/storageconfig.hcl;
+            [ -n "${HOSTNAME}" ] && sed -Ei "s|HOSTNAME|${HOSTNAME?}|g" /tmp/storageconfig.hcl;
+            [ -n "${API_ADDR}" ] && sed -Ei "s|API_ADDR|${API_ADDR?}|g" /tmp/storageconfig.hcl;
+            [ -n "${TRANSIT_ADDR}" ] && sed -Ei "s|TRANSIT_ADDR|${TRANSIT_ADDR?}|g" /tmp/storageconfig.hcl;
+            [ -n "${RAFT_ADDR}" ] && sed -Ei "s|RAFT_ADDR|${RAFT_ADDR?}|g" /tmp/storageconfig.hcl;
+            /usr/local/bin/docker-entrypoint.sh vault server -config=/tmp/storageconfig.hcl {{ .Values.server.extraArgs }}
+   {{ else if eq .mode "dev" }}
           - |
             /usr/local/bin/docker-entrypoint.sh vault server -dev {{ .Values.server.extraArgs }}
-  {{ else }}
-      {{ if or (eq .mode "standalone") (eq .mode "ha") }}
-              - |
-                cp /vault/config/extraconfig-from-values.hcl /tmp/storageconfig.hcl;
-                [ -n "${HOST_IP}" ] && sed -Ei "s|HOST_IP|${HOST_IP?}|g" /tmp/storageconfig.hcl;
-                [ -n "${POD_IP}" ] && sed -Ei "s|POD_IP|${POD_IP?}|g" /tmp/storageconfig.hcl;
-                [ -n "${HOSTNAME}" ] && sed -Ei "s|HOSTNAME|${HOSTNAME?}|g" /tmp/storageconfig.hcl;
-                [ -n "${API_ADDR}" ] && sed -Ei "s|API_ADDR|${API_ADDR?}|g" /tmp/storageconfig.hcl;
-                [ -n "${TRANSIT_ADDR}" ] && sed -Ei "s|TRANSIT_ADDR|${TRANSIT_ADDR?}|g" /tmp/storageconfig.hcl;
-                [ -n "${RAFT_ADDR}" ] && sed -Ei "s|RAFT_ADDR|${RAFT_ADDR?}|g" /tmp/storageconfig.hcl;
-                /usr/local/bin/docker-entrypoint.sh vault server -config=/tmp/storageconfig.hcl {{ .Values.server.extraArgs }}
-      {{- end -}}
-   {{- end -}}
+  {{ end }}
 {{- end -}}
 
 {{/*
 Set's additional environment variables based on the mode.
 */}}
 {{- define "vault.envs" -}}
-  {{ if .Values.server.dev.enabled }}
+  {{ if eq .mode "dev" }}
             - name: VAULT_DEV_ROOT_TOKEN_ID
               value: {{ .Values.server.dev.devRootToken }}
             - name: VAULT_DEV_LISTEN_ADDRESS
@@ -238,7 +236,7 @@ based on the mode configured.
               mountPath: {{ .Values.server.dataStorage.mountPath }}
     {{ end }}
   {{ end }}
-  {{ if or (.Values.server.standalone.config)  (.Values.server.ha.config) }}
+  {{ if and (ne .mode "dev") (or (.Values.server.standalone.config)  (.Values.server.ha.config)) }}
             - name: config
               mountPath: /vault/config
   {{ end }}
@@ -263,7 +261,7 @@ might not use data storage since Consul is likely it's backend, however, audit
 storage might be desired by the user.
 */}}
 {{- define "vault.volumeclaims" -}}
-  {{- if or .Values.server.dataStorage.enabled .Values.server.auditStorage.enabled }}
+  {{- if and (ne .mode "dev") (or .Values.server.dataStorage.enabled .Values.server.auditStorage.enabled) }}
   volumeClaimTemplates:
       {{- if and (eq (.Values.server.dataStorage.enabled | toString) "true") (or (eq .mode "standalone") (eq (.Values.server.ha.raft.enabled | toString ) "true" )) }}
     - metadata:
@@ -300,7 +298,7 @@ storage might be desired by the user.
 Set's the affinity for pod placement when running in standalone and HA modes.
 */}}
 {{- define "vault.affinity" -}}
-  {{- if .Values.server.affinity }}
+  {{- if and (ne .mode "dev") .Values.server.affinity }}
       affinity:
         {{ $tp := typeOf .Values.server.affinity }}
         {{- if eq $tp "string" }}
@@ -330,7 +328,7 @@ Sets the injector affinity for pod placement
 Sets the topologySpreadConstraints when running in standalone and HA modes.
 */}}
 {{- define "vault.topologySpreadConstraints" -}}
-  {{- if .Values.server.topologySpreadConstraints }}
+  {{- if and (ne .mode "dev") .Values.server.topologySpreadConstraints }}
       topologySpreadConstraints:
         {{ $tp := typeOf .Values.server.topologySpreadConstraints }}
         {{- if eq $tp "string" }}
@@ -361,7 +359,7 @@ Sets the injector topologySpreadConstraints for pod placement
 Sets the toleration for pod placement when running in standalone and HA modes.
 */}}
 {{- define "vault.tolerations" -}}
-  {{- if .Values.server.tolerations }}
+  {{- if and (ne .mode "dev") .Values.server.tolerations }}
       tolerations:
       {{- $tp := typeOf .Values.server.tolerations }}
       {{- if eq $tp "string" }}
@@ -391,7 +389,7 @@ Sets the injector toleration for pod placement
 Set's the node selector for pod placement when running in standalone and HA modes.
 */}}
 {{- define "vault.nodeselector" -}}
-  {{- if .Values.server.nodeSelector }}
+  {{- if and (ne .mode "dev") .Values.server.nodeSelector }}
       nodeSelector:
       {{- $tp := typeOf .Values.server.nodeSelector }}
       {{- if eq $tp "string" }}
@@ -563,7 +561,7 @@ securityContext for the statefulset vault container
 Sets extra injector service account annotations
 */}}
 {{- define "injector.serviceAccount.annotations" -}}
-  {{- if .Values.injector.serviceAccount.annotations }}
+  {{- if and (ne .mode "dev") .Values.injector.serviceAccount.annotations }}
   annotations:
     {{- $tp := typeOf .Values.injector.serviceAccount.annotations }}
     {{- if eq $tp "string" }}
@@ -635,7 +633,7 @@ Create the name of the service account to use
 Sets extra service account annotations
 */}}
 {{- define "vault.serviceAccount.annotations" -}}
-  {{- if .Values.server.serviceAccount.annotations }}
+  {{- if and (ne .mode "dev") .Values.server.serviceAccount.annotations }}
   annotations:
     {{- $tp := typeOf .Values.server.serviceAccount.annotations }}
     {{- if eq $tp "string" }}
@@ -724,7 +722,7 @@ Sets extra statefulset annotations
 Sets VolumeClaim annotations for data volume
 */}}
 {{- define "vault.dataVolumeClaim.annotations" -}}
-  {{- if and (.Values.server.dataStorage.enabled) (.Values.server.dataStorage.annotations) }}
+  {{- if and (ne .mode "dev") (.Values.server.dataStorage.enabled) (.Values.server.dataStorage.annotations) }}
   annotations:
     {{- $tp := typeOf .Values.server.dataStorage.annotations }}
     {{- if eq $tp "string" }}
@@ -739,7 +737,7 @@ Sets VolumeClaim annotations for data volume
 Sets VolumeClaim annotations for audit volume
 */}}
 {{- define "vault.auditVolumeClaim.annotations" -}}
-  {{- if and (.Values.server.auditStorage.enabled) (.Values.server.auditStorage.annotations) }}
+  {{- if and (ne .mode "dev") (.Values.server.auditStorage.enabled) (.Values.server.auditStorage.annotations) }}
   annotations:
     {{- $tp := typeOf .Values.server.auditStorage.annotations }}
     {{- if eq $tp "string" }}
