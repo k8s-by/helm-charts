@@ -132,7 +132,7 @@ template logic.
   {{- else if not .serverEnabled -}}
     {{- $_ := set . "mode" "external" -}}
   {{- else if eq (.Values.server.dev.enabled | toString) "true" -}}
-    {{- $_ := set . "mode" "dev" -}}
+    {{- $_ := set . "mode" "standalone" -}}
   {{- else if eq (.Values.server.ha.enabled | toString) "true" -}}
     {{- $_ := set . "mode" "ha" -}}
   {{- else if or (eq (.Values.server.standalone.enabled | toString) "true") (eq (.Values.server.standalone.enabled | toString) "-") -}}
