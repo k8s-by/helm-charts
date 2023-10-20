@@ -1,0 +1,119 @@
+nameOverride: ""
+fullnameOverride: ""
+
+replicaCount: 1
+
+image:
+  repository: alex202/alertsnitch
+  pullPolicy: IfNotPresent
+  tag: ""
+
+imagePullSecrets: []
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+#  capabilities:
+#    drop:
+#    - ALL
+#  readOnlyRootFilesystem: true
+#  runAsNonRoot: true
+#  runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 9567
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  
+clusterDomain: cluster.local
+
+database:
+  backend: postgres
+  dsn: ""
+
+postgresql:
+  enabled: true
+  global:
+    postgresql:
+      auth:
+        password: alertsnitch
+        database: alertsnitch
+        username: alertsnitch
+      service:
+        ports:
+          postgresql: 5432
+  primary:
+    persistence:
+      size: 2Gi
+
+extraArgs: []
+
+extraEnvs: {}
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+priorityClassName: ""
+
+metrics:
+  enabled: false
+
+# Used to define custom livenessProbe settings
+livenessProbe:
+  # When a probe fails, Kubernetes will try failureThreshold times before giving up
+  failureThreshold: 2
+  # Number of seconds after the container has started before probe initiates
+  initialDelaySeconds: 5
+  # How often (in seconds) to perform the probe
+  periodSeconds: 2
+  # Minimum consecutive successes for the probe to be considered successful after having failed
+  successThreshold: 1
+  # Number of seconds after which the probe times out.
+  timeoutSeconds: 5
+# Used to define custom readinessProbe settings
+readinessProbe:
+  # When a probe fails, Kubernetes will try failureThreshold times before giving up
+  failureThreshold: 2
+  # Number of seconds after the container has started before probe initiates
+  initialDelaySeconds: 5
+  # How often (in seconds) to perform the probe
+  periodSeconds: 2
+  # Minimum consecutive successes for the probe to be considered successful after having failed
+  successThreshold: 1
+  # Number of seconds after which the probe times out.
+  timeoutSeconds: 5
+# Used to define custom startupProbe settings
+startupProbe:
+  # When a probe fails, Kubernetes will try failureThreshold times before giving up
+  failureThreshold: 12
+  # Number of seconds after the container has started before probe initiates
+  initialDelaySeconds: 5
+  # How often (in seconds) to perform the probe
+  periodSeconds: 5
+  # Minimum consecutive successes for the probe to be considered successful after having failed
+  successThreshold: 1
+  # Number of seconds after which the probe times out.
+  timeoutSeconds: 5
