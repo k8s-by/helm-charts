@@ -1,5 +1,21 @@
 apiVersion: v1
 entries:
+  alertsnitch:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2023-10-20T19:02:06.660211239Z"
+    dependencies:
+    - condition: database.postgresql.enabled
+      name: postgresql
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 12.12.5
+    description: A Helm chart of Alertsnitch
+    digest: 9044a30e3353f23a67d0b766b443ae097e9eda52a3715500173a58b224c6effb
+    name: alertsnitch
+    type: application
+    urls:
+    - https://github.com/k8s-by/helm-charts/releases/download/alertsnitch-1.0.1/alertsnitch-1.0.1.tgz
+    version: 1.0.1
   eck-operator:
   - apiVersion: v2
     appVersion: 2.2.0
@@ -642,4 +658,4 @@ entries:
     urls:
     - https://github.com/k8s-by/helm-charts/releases/download/vault-0.20.0/vault-0.20.0.tgz
     version: 0.20.0
-generated: "2023-07-06T17:23:42.366942577Z"
+generated: "2023-10-20T19:02:06.660245935Z"
